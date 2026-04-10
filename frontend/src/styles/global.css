@@ -1,0 +1,109 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Brand */
+  --blue-50:  #E6F1FB;
+  --blue-100: #B5D4F4;
+  --blue-500: #185FA5;
+  --blue-600: #135491;
+  --blue-700: #0F447A;
+
+  --green-50:  #E1F5EE;
+  --green-500: #1D9E75;
+
+  --amber-50:  #FAEEDA;
+  --amber-500: #BA7517;
+
+  --red-50:   #FCEBEB;
+  --red-500:  #E24B4A;
+
+  /* Neutrals */
+  --gray-0:   #FFFFFF;
+  --gray-50:  #F8F9FA;
+  --gray-100: #F1F3F5;
+  --gray-200: #E9ECEF;
+  --gray-300: #DEE2E6;
+  --gray-400: #ADB5BD;
+  --gray-500: #868E96;
+  --gray-600: #495057;
+  --gray-700: #343A40;
+  --gray-800: #212529;
+  --gray-900: #0D1117;
+
+  /* Semantic */
+  --bg:        var(--gray-0);
+  --bg-subtle: var(--gray-50);
+  --bg-muted:  var(--gray-100);
+  --border:    var(--gray-200);
+  --border-strong: var(--gray-300);
+  --text:      var(--gray-800);
+  --text-muted:  var(--gray-500);
+  --text-subtle: var(--gray-400);
+
+  --radius-sm: 6px;
+  --radius:    10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow:    0 4px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.04);
+  --shadow-lg: 0 10px 40px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.06);
+}
+
+html { height: 100%; }
+
+body {
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg);
+  height: 100%;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root { height: 100%; }
+
+a { color: var(--blue-500); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+button {
+  font-family: var(--font);
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--blue-500);
+  outline-offset: 2px;
+}
+
+input, textarea, select {
+  font-family: var(--font);
+  font-size: 15px;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: 2px solid var(--blue-500);
+  outline-offset: -1px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gray-400); }
+
+/* Utility */
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); border: 0;
+}
