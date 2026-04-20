@@ -3,6 +3,7 @@ import { useAuth } from '../../hooks/useAuth'
 import { supabase } from '../../lib/supabase'
 import Chat from '../chat/Chat'
 import styles from './AppLayout.module.css'
+import UpgradePage from '../billing/UpgradePage'
 
 const NAV_ITEMS = [
   { id: 'chat', label: 'Ask Amira', icon: (
@@ -12,7 +13,7 @@ const NAV_ITEMS = [
   )},
   { id: 'documents', label: 'My Documents', icon: (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-      <path d="M9 12h6M9 16h6M13 3H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9l-7-6z" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"/>
+      <path d="M9 12h6M9 16h6M13 3H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2Vh9l-7-6z" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"/>
       <path d="M13 3v6h6" stroke="currentColor" strokeWidth="1.75"/>
     </svg>
   )},
@@ -104,6 +105,7 @@ export default function AppLayout() {
         {activeTab === 'documents' && <ComingSoon title="Document Upload" desc="Upload legal notices, contracts, and IRS letters for AI-powered analysis." />}
         {activeTab === 'compliance' && <ComingSoon title="Compliance Checklist" desc="Your personalized checklist of compliance requirements for your industry and state." />}
         {activeTab === 'profile' && <ProfileView profile={profile} />}
+        {activeTab === 'upgrade' && <UpgradePage />}
       </main>
     </div>
   )
