@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { useAuth } from '../../hooks/useAuth'
 import { supabase } from '../../lib/supabase'
 import Chat from '../chat/Chat'
-import styles from './AppLayout.module.css'
 import UpgradePage from '../billing/UpgradePage'
+import styles from './AppLayout.module.css'
 
 const NAV_ITEMS = [
   { id: 'chat', label: 'Ask Amira', icon: (
@@ -13,7 +13,7 @@ const NAV_ITEMS = [
   )},
   { id: 'documents', label: 'My Documents', icon: (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-      <path d="M9 12h6M9 16h6M13 3H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2Vh9l-7-6z" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"/>
+      <path d="M9 12h6M9 16h6M13 3H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9l-7-6z" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"/>
       <path d="M13 3v6h6" stroke="currentColor" strokeWidth="1.75"/>
     </svg>
   )},
@@ -25,6 +25,11 @@ const NAV_ITEMS = [
   { id: 'profile', label: 'My Profile', icon: (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
       <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"/>
+    </svg>
+  )},
+  { id: 'upgrade', label: 'Upgrade to Pro', icon: (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
   )},
 ]
