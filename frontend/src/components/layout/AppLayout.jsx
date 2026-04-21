@@ -164,3 +164,4 @@ function ProfileView({ profile }) {
     </div>
   )
 }
+// v2 - Upgrade to Pro enabled
