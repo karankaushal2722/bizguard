@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAuth } from '../../hooks/useAuth'
 import { supabase } from '../../lib/supabase'
 import Chat from '../chat/Chat'
+import DocumentUpload from '../documents/DocumentUpload'
 import UpgradePage from '../billing/UpgradePage'
 import styles from './AppLayout.module.css'
 
@@ -107,7 +108,7 @@ export default function AppLayout() {
       {/* Main content */}
       <main className={styles.main}>
         {activeTab === 'chat' && <Chat />}
-        {activeTab === 'documents' && <ComingSoon title="Document Upload" desc="Upload legal notices, contracts, and IRS letters for AI-powered analysis." />}
+        {activeTab === 'documents' && <DocumentUpload />}
         {activeTab === 'compliance' && <ComingSoon title="Compliance Checklist" desc="Your personalized checklist of compliance requirements for your industry and state." />}
         {activeTab === 'profile' && <ProfileView profile={profile} />}
         {activeTab === 'upgrade' && <UpgradePage />}
