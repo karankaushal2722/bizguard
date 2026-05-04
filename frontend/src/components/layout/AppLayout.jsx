@@ -85,7 +85,7 @@ export default function AppLayout() {
               >
                 <span className={styles.navIcon}>{item.icon}</span>
                 <span>{item.label}</span>
-                {(item.id === 'documents' || item.id === 'compliance') && (
+                {item.id === 'compliance' && (
                   <span className={styles.comingSoon}>Soon</span>
                 )}
               </button>
