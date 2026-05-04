@@ -39,7 +39,7 @@ app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), async
     res.json({ received: true });
 });
 
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({ limit: '25mb' }));
 
 app.get('/health', (req, res) => {
     res.json({ status: 'Amira is online', timestamp: new Date().toISOString() });
@@ -62,6 +62,27 @@ app.post('/api/chat', async (req, res) => {
           console.error('Chat error:', err.message);
           res.status(500).json({ error: err.message });
     }
+});
+
+
+// ── Document Analysis ─────────────────────────────────────────────────────────
+app.post('/api/analyze-document', async (req, res) => {
+  try {
+    const { messages, systemPrompt } = req.body;
+    if (!messages || !Array.isArray(messages)) {
+      return res.status(400).json({ error: 'Messages array required' });
+    }
+    const response = await client.messages.create({
+      model: 'claude-opus-4-6',
+      max_tokens: 2048,
+      system: systemPrompt,
+      messages,
+    });
+    res.json({ content: response.content[0].text });
+  } catch (err) {
+    console.error('Document analysis error:', err.message);
+    res.status(500).json({ error: err.message });
+  }
 });
 
 app.post('/api/stripe/create-checkout', async (req, res) => {
