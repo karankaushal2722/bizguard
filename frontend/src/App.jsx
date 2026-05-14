@@ -1,12 +1,14 @@
-import { useEffect } from 'react'
+import { useState } from 'react'
 import { AuthProvider, useAuth } from './hooks/useAuth'
 import AuthPage from './components/auth/AuthPage'
 import Onboarding from './components/onboarding/Onboarding'
 import AppLayout from './components/layout/AppLayout'
+import LandingPage from './components/landing/LandingPage'
 import './styles/global.css'
 
 function AppRoutes() {
   const { user, profile, loading } = useAuth()
+  const [showAuth, setShowAuth] = useState(false)
 
   if (loading) {
     return (
@@ -21,14 +23,10 @@ function AppRoutes() {
     )
   }
 
-  // Not logged in
-  if (!user) return <AuthPage />
-
-  // Logged in but hasn't completed onboarding
-  if (!profile?.onboarding_complete) return <Onboarding />
-
-  // Fully set up — show the app
-  return <AppLayout />
+  if (user && profile?.onboarding_complete) return <AppLayout />
+  if (user && !profile?.onboarding_complete) return <Onboarding />
+  if (showAuth) return <AuthPage onBack={() => setShowAuth(false)} />
+  return <LandingPage onGetStarted={() => setShowAuth(true)} />
 }
 
 export default function App() {
