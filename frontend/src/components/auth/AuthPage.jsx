@@ -20,7 +20,7 @@ const UI_TEXT = {
   ko: { title: '비즈니스를 보호하세요', subtitle: '로그인하거나 무료 계정을 만드세요', emailPlaceholder: '이메일 주소', passwordPlaceholder: '비밀번호', signin: '로그인', signup: '무료 계정 만들기', toggle_signin: '이미 계정이 있으신가요? 로그인', toggle_signup: '계정이 없으신가요? 무료로 가입', loading: '잠시만 기다려주세요...', error_label: '오류' },
 }
 
-export default function AuthPage() {
+export default function AuthPage({ onBack }) {
   const [lang, setLang] = useState('en')
   const [mode, setMode] = useState('signin') // 'signin' | 'signup'
   const [email, setEmail] = useState('')
@@ -58,7 +58,12 @@ export default function AuthPage() {
     <div className={styles.page}>
       <div className={styles.card}>
         {/* Logo */}
-        <div className={styles.logo}>
+        {onBack && (
+        <button onClick={onBack} style={{ position: 'absolute', top: '20px', left: '20px', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '14px', color: 'var(--text-muted)' }}>
+          ← Back
+        </button>
+      )}
+      <div className={styles.logo}>
           <div className={styles.logoIcon}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
               <path d="M12 2L4 6v6c0 5.25 3.5 10.15 8 11.5C16.5 22.15 20 17.25 20 12V6L12 2z" fill="white"/>
