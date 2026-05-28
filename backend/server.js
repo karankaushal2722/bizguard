@@ -89,9 +89,13 @@ app.post('/api/stripe/create-checkout', async (req, res) => {
     try {
           const { userId, userEmail, planId } = req.body;
           const plans = {
-                  pro_monthly: process.env.STRIPE_PRICE_PRO_MONTHLY,
-                  pro_yearly: process.env.STRIPE_PRICE_PRO_YEARLY,
-          };
+          pro_monthly: process.env.STRIPE_PRICE_PRO_MONTHLY,
+          pro_yearly: process.env.STRIPE_PRICE_PRO_YEARLY,
+          business_monthly: process.env.STRIPE_PRICE_PRO_MONTHLY,
+          business_yearly: process.env.STRIPE_PRICE_PRO_YEARLY,
+          enterprise_monthly: process.env.STRIPE_PRICE_ENTERPRISE_MONTHLY,
+          enterprise_yearly: process.env.STRIPE_PRICE_ENTERPRISE_YEARLY,
+        };
           const priceId = plans[planId];
           if (!priceId) return res.status(400).json({ error: 'Invalid plan' });
           const session = await stripe.checkout.sessions.create({
