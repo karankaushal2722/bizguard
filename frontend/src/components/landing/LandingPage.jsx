@@ -3,7 +3,7 @@ import styles from './LandingPage.module.css'
 const FEATURES = [
   { icon: '🤖', title: 'Amira — your AI advisor', desc: 'Ask anything about your specific business, industry, and state. Tailored answers, not generic advice.' },
   { icon: '📄', title: 'Document analysis', desc: 'Upload any IRS notice, legal letter, DOT violation, or contract. Amira reads it and tells you what to do.' },
-  { icon: '🎙️', title: 'Voice in 6 languages', desc: 'Talk to Amira in English, Spanish, Portuguese, Mandarin, French, or Korean.' },
+  { icon: '🎙️', title: 'Voice in 6 languages', desc: 'Talk to Amira in English, Spanish, Hindi, Punjabi, Urdu, Farsi, Portuguese, Mandarin, French, or Korean.' },
   { icon: '⚡', title: 'Instant answers', desc: 'No waiting. No $300/hr attorney fees. Clear answers in seconds, day or night.' },
   { icon: '🏛️', title: 'Compliance checklists', desc: 'Know what regulations apply before an inspector shows up.' },
   { icon: '🔒', title: 'Built for your industry', desc: '12 industries — trucking, food, construction, healthcare, retail, and more.' },
@@ -62,11 +62,10 @@ export default function LandingPage({ onGetStarted }) {
           AI-powered legal protection for small business
         </div>
         <h1 className={styles.heroTitle}>
-          Your business deserves <em>real legal protection</em>
+          Your own legal & compliance advisor — <em>available 24/7, no appointment needed</em>
         </h1>
         <p className={styles.heroSub}>
-          Amira is your always-on AI advisor for IRS notices, DOT violations, contracts, legal threats,
-          and compliance — in plain English, in your language.
+          Meet Amira, Your AI Compliance Partner. BizGuard gives small business owners personalized legal and accounting guidance in their language. Amira understands your industry, location, and compliance needs.
         </p>
         <div className={styles.heroActions}>
           <button className={styles.btnPrimary} onClick={onGetStarted}>
@@ -76,13 +75,13 @@ export default function LandingPage({ onGetStarted }) {
             See how it works
           </button>
         </div>
-        <p className={styles.heroNote}>Free forever plan · No setup required · Works in 6 languages</p>
+        <p className={styles.heroNote}>Free forever plan · No setup required · Works in 10 languages</p>
       </section>
 
       {/* PROOF BAR */}
       <div className={styles.proofBar}>
         <div className={styles.proofItem}><strong>12</strong> industries</div>
-        <div className={styles.proofItem}><strong>6</strong> languages</div>
+        <div className={styles.proofItem}><strong>10</strong> languages</div>
         <div className={styles.proofItem}><strong>IRS</strong> · DOT · Legal · OSHA</div>
         <div className={styles.proofItem}><strong>Voice</strong> input & output</div>
         <div className={styles.proofItem}><strong>Document</strong> analysis</div>
@@ -181,7 +180,7 @@ export default function LandingPage({ onGetStarted }) {
             <div className={styles.planName}>Free</div>
             <div className={styles.planPrice}>$0<span>/month</span></div>
             <div className={styles.planFeatures}>
-              {['10 questions per day', 'Basic compliance guidance', 'All 12 industries', '6 languages + voice'].map((f, i) => (
+              {['10 questions per day', 'Basic compliance guidance', 'All 12 industries', '10 languages + voice'].map((f, i) => (
                 <div key={i} className={styles.planFeature}>
                   <span className={styles.check}>✓</span>{f}
                 </div>
