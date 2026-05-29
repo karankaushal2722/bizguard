@@ -1,32 +1,45 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { AuthProvider, useAuth } from './hooks/useAuth'
 import AuthPage from './components/auth/AuthPage'
 import Onboarding from './components/onboarding/Onboarding'
 import AppLayout from './components/layout/AppLayout'
 import LandingPage from './components/landing/LandingPage'
+import PrivacyPolicy from './components/legal/PrivacyPolicy'
+import Terms from './components/legal/Terms'
 import './styles/global.css'
 
 function AppRoutes() {
   const { user, profile, loading } = useAuth()
   const [showAuth, setShowAuth] = useState(false)
+  const [path, setPath] = useState(window.location.pathname)
+
+  useEffect(() => {
+    const onPop = () => setPath(window.location.pathname)
+    window.addEventListener('popstate', onPop)
+    return () => window.removeEventListener('popstate', onPop)
+  }, [])
+
+  // Public legal routes — no auth needed
+  if (path === '/privacy') return <PrivacyPolicy />
+  if (path === '/terms') return <Terms />
 
   if (loading) {
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', flexDirection: 'column', gap: '16px' }}>
-        <div style={{ width: '40px', height: '40px', background: 'var(--blue-500)', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            <path d="M12 2L4 6v6c0 5.25 3.5 10.15 8 11.5C16.5 22.15 20 17.25 20 12V6L12 2z" fill="white"/>
-          </svg>
-        </div>
-        <div style={{ fontSize: '14px', color: 'var(--text-muted)' }}>Loading BizGuard...</div>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', flexDirection: 'column', gap: 16, background: 'var(--dark-900)' }}>
+        <div style={{ width: 40, height: 40, background: 'linear-gradient(135deg,#F97316,#7C3AED)', borderRadius: 12 }} />
+        <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 14 }}>Loading...</p>
       </div>
     )
   }
 
-  if (user && profile?.onboarding_complete) return <AppLayout />
-  if (user && !profile?.onboarding_complete) return <Onboarding />
-  if (showAuth) return <AuthPage onBack={() => setShowAuth(false)} />
-  return <LandingPage onGetStarted={() => setShowAuth(true)} />
+  if (!user) {
+    if (showAuth) return <AuthPage onBack={() => setShowAuth(false)} />
+    return <LandingPage onGetStarted={() => setShowAuth(true)} />
+  }
+
+  if (!profile) return <Onboarding />
+
+  return <AppLayout />
 }
 
 export default function App() {
