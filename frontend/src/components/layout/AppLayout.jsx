@@ -1,169 +1,184 @@
 import { useState } from 'react'
 import { useAuth } from '../../hooks/useAuth'
-import { supabase } from '../../lib/supabase'
 import Chat from '../chat/Chat'
 import DocumentUpload from '../documents/DocumentUpload'
 import UpgradePage from '../billing/UpgradePage'
 import styles from './AppLayout.module.css'
 
 const NAV_ITEMS = [
-  { id: 'chat', label: 'Ask Amira', icon: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-      <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"/>
-    </svg>
-  )},
-  { id: 'documents', label: 'My Documents', icon: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-      <path d="M9 12h6M9 16h6M13 3H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9l-7-6z" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"/>
-      <path d="M13 3v6h6" stroke="currentColor" strokeWidth="1.75"/>
-    </svg>
-  )},
-  { id: 'compliance', label: 'Compliance', icon: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-      <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" stroke="currentColor" strokeWidth="1.75"/>
-    </svg>
-  )},
-  { id: 'profile', label: 'My Profile', icon: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-      <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"/>
-    </svg>
-  )},
-  { id: 'upgrade', label: 'Upgrade to Pro', icon: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
-    </svg>
-  )},
+  {
+    id: 'chat',
+    label: 'Ask Amira',
+    shortLabel: 'Amira',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+      </svg>
+    ),
+  },
+  {
+    id: 'documents',
+    label: 'My Documents',
+    shortLabel: 'Docs',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/>
+      </svg>
+    ),
+  },
+  {
+    id: 'compliance',
+    label: 'Compliance',
+    shortLabel: 'Comply',
+    soon: true,
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 2L4 6v6c0 5.25 3.5 10.15 8 11.5C16.5 22.15 20 17.25 20 12V6L12 2z"/>
+      </svg>
+    ),
+  },
+  {
+    id: 'profile',
+    label: 'My Profile',
+    shortLabel: 'Profile',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+      </svg>
+    ),
+  },
+  {
+    id: 'upgrade',
+    label: 'Upgrade to Pro',
+    shortLabel: 'Upgrade',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+      </svg>
+    ),
+  },
 ]
-// build 1777926894012
-
-const INDUSTRY_LABELS = {
-  trucking: 'Trucking & DOT', food: 'Food & Restaurant', construction: 'Construction',
-  cleaning: 'Cleaning Services', retail: 'Retail', healthcare: 'Healthcare',
-  childcare: 'Childcare', beauty: 'Beauty & Salons', landscaping: 'Landscaping',
-  realestate: 'Real Estate', ecommerce: 'E-commerce', other: 'Business',
-}
 
 export default function AppLayout() {
-  const { profile } = useAuth()
+  const { user, profile, signOut } = useAuth()
   const [activeTab, setActiveTab] = useState('chat')
+  const [drawerOpen, setDrawerOpen] = useState(false)
 
-  async function signOut() {
-    await supabase.auth.signOut()
+  const firstName = profile?.owner_name?.split(' ')[0] || user?.email?.split('@')[0] || 'K'
+  const initials = firstName.substring(0, 2).toUpperCase()
+
+  function renderContent() {
+    switch (activeTab) {
+      case 'chat': return <Chat />
+      case 'documents': return <DocumentUpload />
+      case 'upgrade': return <UpgradePage />
+      default: return (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--text-muted)', flexDirection: 'column', gap: 12 }}>
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 2L4 6v6c0 5.25 3.5 10.15 8 11.5C16.5 22.15 20 17.25 20 12V6L12 2z"/></svg>
+          <p style={{ fontSize: 15, fontWeight: 600 }}>Coming soon</p>
+        </div>
+      )
+    }
   }
 
-  const firstName = profile?.owner_name?.split(' ')[0] || ''
-  const industryLabel = INDUSTRY_LABELS[profile?.industry] || 'Business'
-  const initials = profile?.owner_name?.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase() || '?'
+  const SidebarContent = () => (
+    <>
+      <div className={styles.logo}>
+        <div className={styles.logoIcon}>
+          <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
+            <path d="M12 2L4 6v6c0 5.25 3.5 10.15 8 11.5C16.5 22.15 20 17.25 20 12V6L12 2z" fill="white"/>
+          </svg>
+        </div>
+        BizGuard
+      </div>
+      {profile && (
+        <div className={styles.bizBadge}>
+          <div className={styles.bizName}>{profile.business_name}</div>
+          <div className={styles.bizIndustry}>{profile.industry} · {profile.state}</div>
+        </div>
+      )}
+      <nav className={styles.nav}>
+        {NAV_ITEMS.map(item => (
+          <button
+            key={item.id}
+            className={`${styles.navItem} ${activeTab === item.id ? styles.navActive : ''} ${item.id === 'upgrade' ? styles.navUpgrade : ''}`}
+            onClick={() => { setActiveTab(item.id); setDrawerOpen(false); }}
+          >
+            <span className={styles.navIcon}>{item.icon}</span>
+            {item.label}
+            {item.soon && <span className={styles.comingSoon}>Soon</span>}
+          </button>
+        ))}
+      </nav>
+    </>
+  )
 
   return (
     <div className={styles.layout}>
-      {/* Sidebar */}
       <aside className={styles.sidebar}>
-        <div className={styles.sidebarTop}>
-          <div className={styles.logo}>
-            <div className={styles.logoIcon}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2L4 6v6c0 5.25 3.5 10.15 8 11.5C16.5 22.15 20 17.25 20 12V6L12 2z" fill="white"/>
-              </svg>
-            </div>
-            <span>BizGuard</span>
-          </div>
-
-          {/* Business badge */}
-          <div className={styles.bizBadge}>
-            <div className={styles.bizName}>{profile?.business_name}</div>
-            <div className={styles.bizIndustry}>{industryLabel} · {profile?.state}</div>
-          </div>
-
-          {/* Nav */}
-          <nav className={styles.nav}>
-            {NAV_ITEMS.map(item => (
-              <button
-                key={item.id}
-                className={`${styles.navItem} ${activeTab === item.id ? styles.navActive : ''}`}
-                onClick={() => setActiveTab(item.id)}
-              >
-                <span className={styles.navIcon}>{item.icon}</span>
-                <span>{item.label}</span>
-                {item.id === 'compliance' && (
-                  <span className={styles.comingSoon}>Soon</span>
-                )}
-              </button>
-            ))}
-          </nav>
-        </div>
-
-        {/* User footer */}
+        <div className={styles.sidebarTop}><SidebarContent /></div>
         <div className={styles.sidebarBottom}>
           <div className={styles.userRow}>
             <div className={styles.avatar}>{initials}</div>
             <div className={styles.userInfo}>
-              <div className={styles.userName}>{firstName}</div>
-              <div className={styles.userEmail}>{profile?.email || ''}</div>
+              <div className={styles.userName}>{profile?.owner_name || user?.email}</div>
+              <div className={styles.userEmail}>{user?.email}</div>
             </div>
           </div>
           <button className={styles.signOutBtn} onClick={signOut}>Sign out</button>
         </div>
       </aside>
 
-      {/* Main content */}
-      <main className={styles.main}>
-        {activeTab === 'chat' && <Chat />}
-        {activeTab === 'documents' && <DocumentUpload />}
-        {activeTab === 'compliance' && <ComingSoon title="Compliance Checklist" desc="Your personalized checklist of compliance requirements for your industry and state." />}
-        {activeTab === 'profile' && <ProfileView profile={profile} />}
-        {activeTab === 'upgrade' && <UpgradePage />}
-      </main>
-    </div>
-  )
-}
+      <div className={`${styles.drawerOverlay} ${drawerOpen ? styles.drawerOverlayOpen : ''}`} onClick={() => setDrawerOpen(false)} />
 
-function ComingSoon({ title, desc }) {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', gap: '12px', color: 'var(--text-muted)', textAlign: 'center', padding: '2rem' }}>
-      <div style={{ fontSize: '40px', marginBottom: '8px' }}>🔜</div>
-      <div style={{ fontSize: '18px', fontWeight: '600', color: 'var(--text)' }}>{title}</div>
-      <div style={{ fontSize: '14px', maxWidth: '360px', lineHeight: '1.6' }}>{desc}</div>
-      <div style={{ fontSize: '12px', marginTop: '8px', padding: '4px 12px', background: 'var(--blue-50)', color: 'var(--blue-500)', borderRadius: '20px', fontWeight: '500' }}>Coming soon</div>
-    </div>
-  )
-}
-
-function ProfileView({ profile }) {
-  const INDUSTRY_LABELS = {
-    trucking: 'Trucking & Transportation', food: 'Food & Restaurant', construction: 'Construction & Contracting',
-    cleaning: 'Cleaning Services', retail: 'Retail', healthcare: 'Healthcare / Home Health',
-    childcare: 'Childcare', beauty: 'Beauty & Salons', landscaping: 'Landscaping',
-    realestate: 'Real Estate', ecommerce: 'E-commerce', other: 'Other / General Business',
-  }
-  const BT_LABELS = { sole_prop: 'Sole Proprietor', llc: 'LLC', s_corp: 'S-Corp', c_corp: 'C-Corp', partnership: 'Partnership', nonprofit: 'Nonprofit', not_sure: 'Not sure yet' }
-  const EMP_LABELS = { just_me: 'Just me', '2_5': '2–5 employees', '6_15': '6–15 employees', '16_50': '16–50 employees', '50_plus': '50+ employees' }
-  const YEAR_LABELS = { less_1: 'Less than 1 year', '1_3': '1–3 years', '3_5': '3–5 years', '5_10': '5–10 years', '10_plus': '10+ years' }
-  const LANG_LABELS = { en: 'English', es: 'Español', pt: 'Português', zh: '中文', fr: 'Français', ko: '한국어' }
-
-  const rows = [
-    ['Owner', profile?.owner_name],
-    ['Business name', profile?.business_name],
-    ['Industry', INDUSTRY_LABELS[profile?.industry]],
-    ['Business type', BT_LABELS[profile?.business_type]],
-    ['State', profile?.state],
-    ['Employees', EMP_LABELS[profile?.employees]],
-    ['Years in business', YEAR_LABELS[profile?.years_in_business]],
-    ['Language', LANG_LABELS[profile?.language]],
-  ]
-
-  return (
-    <div style={{ padding: '2rem', maxWidth: '560px' }}>
-      <h2 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '1.5rem' }}>Your Business Profile</h2>
-      <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}>
-        {rows.map(([label, value], i) => value && (
-          <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '13px 16px', borderBottom: i < rows.length - 1 ? '1px solid var(--border)' : 'none', fontSize: '14px' }}>
-            <span style={{ color: 'var(--text-muted)' }}>{label}</span>
-            <strong style={{ color: 'var(--text)' }}>{value}</strong>
+      <div className={`${styles.drawer} ${drawerOpen ? styles.drawerOpen : ''}`}>
+        <div className={styles.drawerTop}><SidebarContent /></div>
+        <div className={styles.drawerBottom}>
+          <div className={styles.userRow}>
+            <div className={styles.avatar}>{initials}</div>
+            <div className={styles.userInfo}>
+              <div className={styles.userName}>{profile?.owner_name || user?.email}</div>
+              <div className={styles.userEmail}>{user?.email}</div>
+            </div>
           </div>
-        ))}
+          <button className={styles.signOutBtn} onClick={signOut}>Sign out</button>
+        </div>
       </div>
+
+      <main className={styles.main}>
+        <header className={styles.mobileHeader}>
+          <button style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }} onClick={() => setDrawerOpen(true)}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round">
+              <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+          </button>
+          <div className={styles.mobileLogoRow}>
+            <div className={styles.logoIcon} style={{ width: 28, height: 28 }}>
+              <svg viewBox="0 0 24 24" fill="none" width="14" height="14">
+                <path d="M12 2L4 6v6c0 5.25 3.5 10.15 8 11.5C16.5 22.15 20 17.25 20 12V6L12 2z" fill="white"/>
+              </svg>
+            </div>
+            BizGuard
+          </div>
+          <button className={styles.mobileAvatarBtn} onClick={() => setDrawerOpen(true)}>{initials}</button>
+        </header>
+        {renderContent()}
+      </main>
+
+      <nav className={styles.bottomNav}>
+        <div className={styles.bottomNavInner}>
+          {NAV_ITEMS.map(item => (
+            <button
+              key={item.id}
+              className={`${styles.bottomNavItem} ${activeTab === item.id ? styles.bottomNavActive : ''} ${item.id === 'upgrade' ? styles.bottomNavUpgrade : ''}`}
+              onClick={() => setActiveTab(item.id)}
+            >
+              <span className={styles.bottomNavIcon}>{item.icon}</span>
+              <span className={styles.bottomNavLabel}>{item.shortLabel}</span>
+            </button>
+          ))}
+        </div>
+      </nav>
     </div>
   )
 }
-// v2 - Upgrade to Pro enabled
