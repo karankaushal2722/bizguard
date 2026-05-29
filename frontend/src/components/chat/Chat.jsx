@@ -78,7 +78,7 @@ export default function Chat() {
   function speakText(text) {
     if (!window.speechSynthesis || !profile?.language || profile.language === 'en') return
     const utterance = new SpeechSynthesisUtterance(text.replace(/[#*`]/g, '').substring(0, 500))
-    const langMap = { es: 'es-ES', pt: 'pt-BR', zh: 'zh-CN', fr: 'fr-FR', ko: 'ko-KR' }
+    const langMap = { es: 'es-ES', pt: 'pt-BR', zh: 'zh-CN', fr: 'fr-FR', ko: 'ko-KR', hi: 'hi-IN', pa: 'pa-IN', ur: 'ur-PK', fa: 'fa-IR' }
     utterance.lang = langMap[profile.language] || 'en-US'
     utterance.rate = 0.9
     setSpeaking(true)
@@ -92,7 +92,7 @@ export default function Chat() {
     if (!SpeechRecognition) { alert('Voice input is not supported in this browser.'); return }
     const recognition = new SpeechRecognition()
     recognitionRef.current = recognition
-    const langMap = { en: 'en-US', es: 'es-ES', pt: 'pt-BR', zh: 'zh-CN', fr: 'fr-FR', ko: 'ko-KR' }
+    const langMap = { en: 'en-US', es: 'es-ES', pt: 'pt-BR', zh: 'zh-CN', fr: 'fr-FR', ko: 'ko-KR', hi: 'hi-IN', pa: 'pa-IN', ur: 'ur-PK', fa: 'fa-IR' }
     recognition.lang = langMap[profile?.language] || 'en-US'
     recognition.continuous = false
     recognition.interimResults = false
@@ -129,7 +129,7 @@ export default function Chat() {
               <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" stroke="currentColor" strokeWidth="2"/>
               <path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
             </svg>
-            {listening ? 'Listening…' : 'Tap the mic and speak to Amira in any language'}
+            {listening ? 'Listening…' : 'Tap the mic and speak in any language'}
           </button>
           <div className={styles.quickPromptLabel}>Common questions for your business:</div>
           <div className={styles.quickPrompts}>
