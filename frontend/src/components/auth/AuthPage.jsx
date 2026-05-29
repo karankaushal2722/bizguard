@@ -9,6 +9,10 @@ const LANGUAGES = [
   { code: 'zh', label: '中文' },
   { code: 'fr', label: 'Français' },
   { code: 'ko', label: '한국어' },
+  { code: 'hi', label: 'हिंदी' },
+  { code: 'pa', label: 'ਪੰਜਾਬੀ' },
+  { code: 'ur', label: 'اردو' },
+  { code: 'fa', label: 'فارسی' },
 ]
 
 const UI_TEXT = {
