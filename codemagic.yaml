@@ -1,0 +1,88 @@
+workflows:
+  ios-workflow:
+    name: BizGuard iOS
+    max_build_duration: 60
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: co.bizguard.app
+      vars:
+        APP_ID: co.bizguard.app
+      node: v20
+      xcode: latest
+    scripts:
+      - name: Install dependencies
+        script: |
+          cd frontend
+          npm install
+      - name: Install Capacitor CLI
+        script: cd frontend && npm install -g @capacitor/cli
+      - name: Build web app
+        script: |
+          cd frontend
+          npm run build
+      - name: Sync Capacitor
+        script: |
+          cd frontend
+          npx cap sync ios
+      - name: Set up code signing
+        script: xcode-project use-profiles
+      - name: Build iOS
+        script: |
+          cd frontend/ios/App
+          xcodebuild -workspace App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -archivePath $CM_BUILD_DIR/App.xcarchive \
+            archive \
+            CODE_SIGN_STYLE=AUTOMATIC \
+            DEVELOPMENT_TEAM=$DEVELOPMENT_TEAM
+      - name: Export IPA
+        script: |
+          xcode-project build-ipa \
+            --workspace frontend/ios/App/App.xcworkspace \
+            --scheme App
+    artifacts:
+      - build/ios/ipa/*.ipa
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+
+  android-workflow:
+    name: BizGuard Android
+    max_build_duration: 60
+    environment:
+      android_signing:
+        - keystore_reference
+      vars:
+        PACKAGE_NAME: co.bizguard.app
+      node: v20
+      java: 17
+    scripts:
+      - name: Install dependencies
+        script: |
+          cd frontend
+          npm install
+      - name: Build web app
+        script: |
+          cd frontend
+          npm run build
+      - name: Sync Capacitor
+        script: |
+          cd frontend
+          npm install -g @capacitor/cli
+          npx cap sync android
+      - name: Build Android release
+        script: |
+          cd frontend/android
+          chmod +x gradlew
+          ./gradlew bundleRelease
+    artifacts:
+      - frontend/android/app/build/outputs/**/*.aab
+      - frontend/android/app/build/outputs/**/*.apk
+    publishing:
+      google_play:
+        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+        track: internal
+        submit_as_draft: true
