@@ -2,6 +2,8 @@ workflows:
   ios-workflow:
     name: BizGuard iOS
     max_build_duration: 60
+    integrations:
+      app_store_connect: BizGuard_ASC
     environment:
       ios_signing:
         distribution_type: app_store
@@ -16,28 +18,19 @@ workflows:
           cd frontend
           npm install
       - name: Install Capacitor CLI
-        script: cd frontend && npm install -g @capacitor/cli
+        script: npm install -g @capacitor/cli
       - name: Build web app
         script: |
           cd frontend
           npm run build
-      - name: Sync Capacitor
+      - name: Add iOS platform
         script: |
           cd frontend
+          npx cap add ios || true
           npx cap sync ios
       - name: Set up code signing
         script: xcode-project use-profiles
       - name: Build iOS
-        script: |
-          cd frontend/ios/App
-          xcodebuild -workspace App.xcworkspace \
-            -scheme App \
-            -configuration Release \
-            -archivePath $CM_BUILD_DIR/App.xcarchive \
-            archive \
-            CODE_SIGN_STYLE=AUTOMATIC \
-            DEVELOPMENT_TEAM=$DEVELOPMENT_TEAM
-      - name: Export IPA
         script: |
           xcode-project build-ipa \
             --workspace frontend/ios/App/App.xcworkspace \
@@ -48,13 +41,15 @@ workflows:
       app_store_connect:
         auth: integration
         submit_to_testflight: true
+        beta_groups:
+          - Internal Testers
 
   android-workflow:
     name: BizGuard Android
     max_build_duration: 60
     environment:
       android_signing:
-        - keystore_reference
+        - bizguard_keystore
       vars:
         PACKAGE_NAME: co.bizguard.app
       node: v20
@@ -68,10 +63,11 @@ workflows:
         script: |
           cd frontend
           npm run build
-      - name: Sync Capacitor
+      - name: Add Android platform
         script: |
-          cd frontend
           npm install -g @capacitor/cli
+          cd frontend
+          npx cap add android || true
           npx cap sync android
       - name: Build Android release
         script: |
@@ -80,7 +76,6 @@ workflows:
           ./gradlew bundleRelease
     artifacts:
       - frontend/android/app/build/outputs/**/*.aab
-      - frontend/android/app/build/outputs/**/*.apk
     publishing:
       google_play:
         credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
