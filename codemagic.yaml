@@ -8,8 +8,13 @@ workflows:
       ios_signing:
         distribution_type: app_store
         bundle_identifier: co.bizguard.app
+      groups:
+        - bizguard
       vars:
         APP_ID: co.bizguard.app
+        VITE_SUPABASE_URL: https://gjkwqmaqxcwmoofkfdrh.supabase.co
+        VITE_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdqa3dxbWFxeGN3bW9vZmtmZHJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTcwNDgsImV4cCI6MjA5MTQzMzA0OH0.W22GN9Gwx1-kkZCq5sX_dWp2ut8fj0oOTI0vKUd6y1Y
+        VITE_API_URL: https://bizguard-production.up.railway.app
       node: v20
       xcode: latest
     scripts:
@@ -40,41 +45,3 @@ workflows:
       app_store_connect:
         auth: integration
         submit_to_testflight: true
-
-  android-workflow:
-    name: BizGuard Android
-    max_build_duration: 60
-    environment:
-      android_signing:
-        - bizguard_keystore
-      vars:
-        PACKAGE_NAME: co.bizguard.app
-      node: v20
-      java: 17
-    scripts:
-      - name: Install dependencies
-        script: |
-          cd frontend
-          npm install
-      - name: Build web app
-        script: |
-          cd frontend
-          npm run build
-      - name: Add Android platform
-        script: |
-          npm install -g @capacitor/cli
-          cd frontend
-          npx cap add android || true
-          npx cap sync android
-      - name: Build Android release
-        script: |
-          cd frontend/android
-          chmod +x gradlew
-          ./gradlew bundleRelease
-    artifacts:
-      - frontend/android/app/build/outputs/**/*.aab
-    publishing:
-      google_play:
-        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
-        track: internal
-        submit_as_draft: true
