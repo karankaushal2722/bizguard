@@ -1,13 +1,40 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/shield.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BizGuard — Business Protection & Legal Guidance</title>
-    <meta name="description" content="AI-powered legal and compliance advisor for small business owners. Available in multiple languages." />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    
+    <!-- App -->
+    <title>BizGuard — AI Legal & Compliance Advisor</title>
+    <meta name="description" content="Your 24/7 AI legal and compliance advisor. Ask Amira anything about IRS notices, DOT violations, contracts, and compliance — in your language, no appointment needed." />
+    
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#F97316" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="BizGuard" />
+    
+    <!-- Icons -->
+    <link rel="icon" type="image/png" href="/icon-192.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    
+    <!-- OG / Social -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="BizGuard — AI Legal & Compliance Advisor" />
+    <meta property="og:description" content="Your 24/7 AI legal and compliance advisor. No appointments, no fees. Available in 10 languages." />
+    <meta property="og:url" content="https://bizguard.co" />
+    <meta property="og:image" content="https://bizguard.co/icon-1024.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="BizGuard — AI Legal & Compliance Advisor" />
+    <meta name="twitter:description" content="Your 24/7 AI legal and compliance advisor. No appointments, no fees." />
+    
+    <!-- Safe area for iPhone notch -->
+    <style>
+      body { margin: 0; padding: 0; }
+      #root { padding-top: env(safe-area-inset-top); }
+    </style>
   </head>
   <body>
     <div id="root"></div>
