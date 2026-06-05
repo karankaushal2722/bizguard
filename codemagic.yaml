@@ -17,8 +17,6 @@ workflows:
         script: |
           cd frontend
           npm install
-      - name: Install Capacitor CLI
-        script: npm install -g @capacitor/cli
       - name: Build web app
         script: |
           cd frontend
@@ -26,6 +24,7 @@ workflows:
       - name: Add iOS platform
         script: |
           cd frontend
+          npm install -g @capacitor/cli
           npx cap add ios || true
           npx cap sync ios
       - name: Set up code signing
@@ -41,8 +40,6 @@ workflows:
       app_store_connect:
         auth: integration
         submit_to_testflight: true
-        beta_groups:
-          - Internal Testers
 
   android-workflow:
     name: BizGuard Android
