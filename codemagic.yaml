@@ -32,6 +32,9 @@ workflows:
           npm install -g @capacitor/cli
           npx cap add ios || true
           npx cap sync ios
+      - name: Increment build number
+        script: |
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER" frontend/ios/App/App/Info.plist
       - name: Set up code signing
         script: xcode-project use-profiles
       - name: Build iOS
