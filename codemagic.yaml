@@ -32,6 +32,16 @@ workflows:
           npm install -g @capacitor/cli
           npx cap add ios || true
           npx cap sync ios
+      - name: Set app icon
+        script: |
+          ICON_SRC="frontend/resources/icon.png"
+          ICON_DEST="frontend/ios/App/App/Assets.xcassets/AppIcon.appiconset"
+          mkdir -p "$ICON_DEST"
+          for size in 20 29 40 58 60 76 80 87 120 152 167 180 1024; do
+            sips -z $size $size "$ICON_SRC" --out "$ICON_DEST/AppIcon-${size}.png" 2>/dev/null
+          done
+          printf '{\n  "images": [\n    {"idiom":"iphone","scale":"2x","size":"20x20","filename":"AppIcon-40.png"},\n    {"idiom":"iphone","scale":"3x","size":"20x20","filename":"AppIcon-60.png"},\n    {"idiom":"iphone","scale":"2x","size":"29x29","filename":"AppIcon-58.png"},\n    {"idiom":"iphone","scale":"3x","size":"29x29","filename":"AppIcon-87.png"},\n    {"idiom":"iphone","scale":"2x","size":"40x40","filename":"AppIcon-80.png"},\n    {"idiom":"iphone","scale":"3x","size":"40x40","filename":"AppIcon-120.png"},\n    {"idiom":"iphone","scale":"2x","size":"60x60","filename":"AppIcon-120.png"},\n    {"idiom":"iphone","scale":"3x","size":"60x60","filename":"AppIcon-180.png"},\n    {"idiom":"ios-marketing","scale":"1x","size":"1024x1024","filename":"AppIcon-1024.png"}\n  ],\n  "info":{"author":"xcode","version":1}\n}' > "$ICON_DEST/Contents.json"
+          echo "Icon set done"
       - name: Increment build number
         script: |
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER" frontend/ios/App/App/Info.plist
@@ -39,8 +49,8 @@ workflows:
         script: xcode-project use-profiles
       - name: Build iOS
         script: |
-          xcode-project build-ipa \
-            --workspace frontend/ios/App/App.xcworkspace \
+          xcode-project build-ipa \\
+            --workspace frontend/ios/App/App.xcworkspace \\
             --scheme App
     artifacts:
       - build/ios/ipa/*.ipa
