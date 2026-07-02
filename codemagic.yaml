@@ -1,60 +1,57 @@
 workflows:
   ios-workflow:
-    name: BizGuard iOS
-    max_build_duration: 60
-    integrations:
-      app_store_connect: BizGuard_ASC
-    environment:
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: co.bizguard.app
-      groups:
-        - bizguard
-      vars:
-        APP_ID: co.bizguard.app
-        VITE_SUPABASE_URL: https://gjkwqmaqxcwmoofkfdrh.supabase.co
-        VITE_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdqa3dxbWFxeGN3bW9vZmtmZHJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTcwNDgsImV4cCI6MjA5MTQzMzA0OH0.W22GN9Gwx1-kkZCq5sX_dWp2ut8fj0oOTI0vKUd6y1Y
-        VITE_API_URL: https://bizguard-production.up.railway.app
-      node: v20
-      xcode: latest
-    scripts:
-      - name: Install dependencies
-        script: |
-          cd frontend
-          npm install
-      - name: Build web app
-        script: |
-          cd frontend
-          npm run build
-      - name: Add iOS platform
-        script: |
-          cd frontend
-          npm install -g @capacitor/cli
-          npx cap add ios || true
-          npx cap sync ios
-      - name: Set app icon
-        script: |
-          ICON_SRC="frontend/resources/icon.png"
-          ICON_DEST="frontend/ios/App/App/Assets.xcassets/AppIcon.appiconset"
-          mkdir -p "$ICON_DEST"
-          for size in 20 29 40 58 60 76 80 87 120 152 167 180 1024; do
-            sips -z $size $size "$ICON_SRC" --out "$ICON_DEST/AppIcon-${size}.png" 2>/dev/null
-          done
-          printf '{\n  "images": [\n    {"idiom":"iphone","scale":"2x","size":"20x20","filename":"AppIcon-40.png"},\n    {"idiom":"iphone","scale":"3x","size":"20x20","filename":"AppIcon-60.png"},\n    {"idiom":"iphone","scale":"2x","size":"29x29","filename":"AppIcon-58.png"},\n    {"idiom":"iphone","scale":"3x","size":"29x29","filename":"AppIcon-87.png"},\n    {"idiom":"iphone","scale":"2x","size":"40x40","filename":"AppIcon-80.png"},\n    {"idiom":"iphone","scale":"3x","size":"40x40","filename":"AppIcon-120.png"},\n    {"idiom":"iphone","scale":"2x","size":"60x60","filename":"AppIcon-120.png"},\n    {"idiom":"iphone","scale":"3x","size":"60x60","filename":"AppIcon-180.png"},\n    {"idiom":"ios-marketing","scale":"1x","size":"1024x1024","filename":"AppIcon-1024.png"}\n  ],\n  "info":{"author":"xcode","version":1}\n}' > "$ICON_DEST/Contents.json"
-          echo "Icon set done"
-      - name: Increment build number
-        script: |
-          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER" frontend/ios/App/App/Info.plist
-      - name: Set up code signing
-        script: xcode-project use-profiles
-      - name: Build iOS
-        script: |
-          xcode-project build-ipa \\
-            --workspace frontend/ios/App/App.xcworkspace \\
-            --scheme App
-    artifacts:
-      - build/ios/ipa/*.ipa
-    publishing:
-      app_store_connect:
-        auth: integration
-        submit_to_testflight: true
+      name: BizGuard iOS
+          max_build_duration: 60
+              integrations:
+                    app_store_connect: BizGuard_ASC
+                        environment:
+                              ios_signing:
+                                      distribution_type: app_store
+                                              bundle_identifier: co.bizguard.app
+                                                    groups:
+                                                            - bizguard
+                                                                  vars:
+                                                                          APP_ID: co.bizguard.app
+                                                                                  VITE_SUPABASE_URL: https://gjkwqmaqxcwmoofkfdrh.supabase.co
+                                                                                          VITE_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdqa3dxbWFxeGN3bW9vZmtmZHJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTcwNDgsImV4cCI6MjA5MTQzMzA0OH0.W22GN9Gwx1-kkZCq5sX_dWp2ut8fj0oOTI0vKUd6y1Y
+                                                                                                  VITE_API_URL: https://bizguard-production.up.railway.app
+                                                                                                        node: v20
+                                                                                                              xcode: latest
+                                                                                                                  scripts:
+                                                                                                                        - name: Install dependencies
+                                                                                                                                script: |
+                                                                                                                                          cd frontend
+                                                                                                                                                    npm install
+                                                                                                                                                          - name: Build web app
+                                                                                                                                                                  script: |
+                                                                                                                                                                            cd frontend
+                                                                                                                                                                                      npm run build
+                                                                                                                                                                                            - name: Add iOS platform
+                                                                                                                                                                                                    script: |
+                                                                                                                                                                                                              cd frontend
+                                                                                                                                                                                                                        npm install -g @capacitor/cli
+                                                                                                                                                                                                                                  npx cap add ios || true
+                                                                                                                                                                                                                                            npx cap sync ios
+                                                                                                                                                                                                                                                  - name: Set app icon
+                                                                                                                                                                                                                                                          script: |
+                                                                                                                                                                                                                                                                    ICON_DEST="frontend/ios/App/App/Assets.xcassets/AppIcon.appiconset"
+                                                                                                                                                                                                                                                                              mkdir -p "$ICON_DEST"
+                                                                                                                                                                                                                                                                                        convert -size 1024x1024 xc:#0D0B14 -fill "#F97316" -draw "polygon 512,100 800,230 800,580 512,780 224,580 224,230" -fill "#0D0B14" -draw "polygon 512,160 736,268 736,548 512,724 288,548 288,268" -fill "#F97316" -font Helvetica-Bold -pointsize 300 -gravity center -annotate 0 B /tmp/bzicon.png 2>/dev/null || cp /Applications/Xcode.app/Contents/Developer/Library/Xcode/Templates/iOS/iOS\ Application.xctemplate/Sticker\ iMessage\ Extension.xctemplate/Contents/Resources/icon.png /tmp/bzicon.png 2>/dev/null || true
+                                                                                                                                                                                                                                                                                                  for size in 20 29 40 58 60 76 80 87 120 152 167 180 1024; do
+                                                                                                                                                                                                                                                                                                              sips -z $size $size /tmp/bzicon.png --out "$ICON_DEST/AppIcon-$size.png" 2>/dev/null || true
+                                                                                                                                                                                                                                                                                                                        done
+                                                                                                                                                                                                                                                                                                                                  printf '{"images":[{"idiom":"iphone","scale":"2x","size":"20x20","filename":"AppIcon-40.png"},{"idiom":"iphone","scale":"3x","size":"20x20","filename":"AppIcon-60.png"},{"idiom":"iphone","scale":"2x","size":"29x29","filename":"AppIcon-58.png"},{"idiom":"iphone","scale":"3x","size":"29x29","filename":"AppIcon-87.png"},{"idiom":"iphone","scale":"2x","size":"40x40","filename":"AppIcon-80.png"},{"idiom":"iphone","scale":"3x","size":"40x40","filename":"AppIcon-120.png"},{"idiom":"iphone","scale":"2x","size":"60x60","filename":"AppIcon-120.png"},{"idiom":"iphone","scale":"3x","size":"60x60","filename":"AppIcon-180.png"},{"idiom":"ipad","scale":"1x","size":"20x20","filename":"AppIcon-20.png"},{"idiom":"ipad","scale":"2x","size":"20x20","filename":"AppIcon-40.png"},{"idiom":"ipad","scale":"1x","size":"29x29","filename":"AppIcon-29.png"},{"idiom":"ipad","scale":"2x","size":"29x29","filename":"AppIcon-58.png"},{"idiom":"ipad","scale":"1x","size":"40x40","filename":"AppIcon-40.png"},{"idiom":"ipad","scale":"2x","size":"40x40","filename":"AppIcon-80.png"},{"idiom":"ipad","scale":"1x","size":"76x76","filename":"AppIcon-76.png"},{"idiom":"ipad","scale":"2x","size":"76x76","filename":"AppIcon-152.png"},{"idiom":"ipad","scale":"2x","size":"83.5x83.5","filename":"AppIcon-167.png"},{"idiom":"ios-marketing","scale":"1x","size":"1024x1024","filename":"AppIcon-1024.png"}],"info":{"author":"xcode","version":1}}' > "$ICON_DEST/Contents.json"
+                                                                                                                                                                                                                                                                                                                                            echo "Icon done"
+                                                                                                                                                                                                                                                                                                                                                  - name: Increment build number
+                                                                                                                                                                                                                                                                                                                                                          script: |
+                                                                                                                                                                                                                                                                                                                                                                    /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER" frontend/ios/App/App/Info.plist
+                                                                                                                                                                                                                                                                                                                                                                          - name: Set up code signing
+                                                                                                                                                                                                                                                                                                                                                                                  script: xcode-project use-profiles
+                                                                                                                                                                                                                                                                                                                                                                                        - name: Build iOS
+                                                                                                                                                                                                                                                                                                                                                                                                script: xcode-project build-ipa --workspace frontend/ios/App/App.xcworkspace --scheme App
+                                                                                                                                                                                                                                                                                                                                                                                                    artifacts:
+                                                                                                                                                                                                                                                                                                                                                                                                          - build/ios/ipa/*.ipa
+                                                                                                                                                                                                                                                                                                                                                                                                              publishing:
+                                                                                                                                                                                                                                                                                                                                                                                                                    app_store_connect:
+                                                                                                                                                                                                                                                                                                                                                                                                                            auth: integration
+                                                                                                                                                                                                                                                                                                                                                                                                                                    submit_to_testflight: true
