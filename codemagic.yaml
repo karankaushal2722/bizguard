@@ -3,6 +3,53 @@ workflows:
     name: BizGuard iOS
     max_build_duration: 60
     integrations:
+      app_store_connect: BizGuard_Key_July2026
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: co.bizguard.app
+      groups:
+        - bizguard
+      vars:
+        APP_ID: co.bizguard.app
+        VITE_SUPABASE_URL: https://gjkwqmaqxcwmoofkfdrh.supabase.co
+        VITE_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdqa3dxbWFxeGN3bW9vZmtmZHJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTcwNDgsImV4cCI6MjA5MTQzMzA0OH0.W22GN9Gwx1-kkZCq5sX_dWp2ut8fj0oOTI0vKUd6y1Y
+        VITE_API_URL: https://bizguard-production.up.railway.app
+      node: v20
+      xcode: latest
+    scripts:
+      - name: Install dependencies
+        script: |
+          cd frontend
+          npm install
+      - name: Build web app
+        script: |
+          cd frontend
+          npm run build
+      - name: Add iOS platform
+        script: |
+          cd frontend
+          npm install -g @capacitor/cli
+          npx cap add ios || true
+          npx cap sync ios
+      - name: Increment build number
+        script: |
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER" frontend/ios/App/App/Info.plist
+      - name: Set up code signing
+        script: xcode-project use-profiles
+      - name: Build iOS
+        script: xcode-project build-ipa --workspace frontend/ios/App/App.xcworkspace --scheme App
+    artifacts:
+      - build/ios/ipa/*.ipa
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+workflows:
+  ios-workflow:
+    name: BizGuard iOS
+    max_build_duration: 60
+    integrations:
       app_store_connect: BizGuard_ASC
     environment:
       ios_signing:
