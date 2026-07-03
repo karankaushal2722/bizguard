@@ -16,7 +16,7 @@ workflows:
         VITE_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdqa3dxbWFxeGN3bW9vZmtmZHJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NTcwNDgsImV4cCI6MjA5MTQzMzA0OH0.W22GN9Gwx1-kkZCq5sX_dWp2ut8fj0oOTI0vKUd6y1Y
         VITE_API_URL: https://bizguard-production.up.railway.app
       node: v20
-      xcode: 16.2
+      xcode: latest
     scripts:
       - name: Install dependencies
         script: |
