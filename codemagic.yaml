@@ -36,11 +36,24 @@ workflows:
         script: |
           ICONSET="frontend/ios/App/App/Assets.xcassets/AppIcon.appiconset"
           mkdir -p "$ICONSET"
-          SRC="frontend/resources/icon.png"
-          # Strip alpha channel: convert to BMP (no alpha) then back to PNG
-          sips -s format bmp "$SRC" --out /tmp/_icon_flat.bmp
-          sips -s format png /tmp/_icon_flat.bmp --out /tmp/_icon_noalpha.png
-          SRC=/tmp/_icon_noalpha.png
+          # Flatten to RGB (remove alpha) using Python+Pillow - required by App Store
+          pip3 install Pillow --quiet 2>/dev/null || true
+          python3 -c "
+from PIL import Image
+src = 'frontend/resources/icon.png'
+img = Image.open(src)
+print('Source mode:', img.mode)
+if img.mode != 'RGB':
+    bg = Image.new('RGB', img.size, (0, 0, 0))
+    if img.mode == 'RGBA':
+        bg.paste(img, mask=img.split()[3])
+    else:
+        bg = img.convert('RGB')
+    img = bg
+img.save('/tmp/_icon_rgb.png', 'PNG')
+print('Saved RGB icon, mode:', img.mode)
+"
+          SRC=/tmp/_icon_rgb.png
           sips -z 40 40   "$SRC" --out "$ICONSET/icon-20@2x.png"
           sips -z 60 60   "$SRC" --out "$ICONSET/icon-20@3x.png"
           sips -z 29 29   "$SRC" --out "$ICONSET/icon-29.png"
@@ -55,26 +68,27 @@ workflows:
           sips -z 167 167 "$SRC" --out "$ICONSET/icon-83.5@2x.png"
           sips -z 1024 1024 "$SRC" --out "$ICONSET/icon-1024.png"
           python3 -c "
-          import json
-          images = [
-            {'size':'20x20','idiom':'iphone','filename':'icon-20@2x.png','scale':'2x'},
-            {'size':'20x20','idiom':'iphone','filename':'icon-20@3x.png','scale':'3x'},
-            {'size':'29x29','idiom':'iphone','filename':'icon-29.png','scale':'1x'},
-            {'size':'29x29','idiom':'iphone','filename':'icon-29@2x.png','scale':'2x'},
-            {'size':'29x29','idiom':'iphone','filename':'icon-29@3x.png','scale':'3x'},
-            {'size':'40x40','idiom':'iphone','filename':'icon-40@2x.png','scale':'2x'},
-            {'size':'40x40','idiom':'iphone','filename':'icon-40@3x.png','scale':'3x'},
-            {'size':'60x60','idiom':'iphone','filename':'icon-60@2x.png','scale':'2x'},
-            {'size':'60x60','idiom':'iphone','filename':'icon-60@3x.png','scale':'3x'},
-            {'size':'76x76','idiom':'ipad','filename':'icon-76.png','scale':'1x'},
-            {'size':'76x76','idiom':'ipad','filename':'icon-76@2x.png','scale':'2x'},
-            {'size':'83.5x83.5','idiom':'ipad','filename':'icon-83.5@2x.png','scale':'2x'},
-            {'size':'1024x1024','idiom':'ios-marketing','filename':'icon-1024.png','scale':'1x'}
-          ]
-          data = {'images': images, 'info': {'version': 1, 'author': 'xcode'}}
-          with open('$ICONSET/Contents.json', 'w') as f:
-            json.dump(data, f, indent=2)
-          "
+import json
+images = [
+  {'size':'20x20','idiom':'iphone','filename':'icon-20@2x.png','scale':'2x'},
+  {'size':'20x20','idiom':'iphone','filename':'icon-20@3x.png','scale':'3x'},
+  {'size':'29x29','idiom':'iphone','filename':'icon-29.png','scale':'1x'},
+  {'size':'29x29','idiom':'iphone','filename':'icon-29@2x.png','scale':'2x'},
+  {'size':'29x29','idiom':'iphone','filename':'icon-29@3x.png','scale':'3x'},
+  {'size':'40x40','idiom':'iphone','filename':'icon-40@2x.png','scale':'2x'},
+  {'size':'40x40','idiom':'iphone','filename':'icon-40@3x.png','scale':'3x'},
+  {'size':'60x60','idiom':'iphone','filename':'icon-60@2x.png','scale':'2x'},
+  {'size':'60x60','idiom':'iphone','filename':'icon-60@3x.png','scale':'3x'},
+  {'size':'76x76','idiom':'ipad','filename':'icon-76.png','scale':'1x'},
+  {'size':'76x76','idiom':'ipad','filename':'icon-76@2x.png','scale':'2x'},
+  {'size':'83.5x83.5','idiom':'ipad','filename':'icon-83.5@2x.png','scale':'2x'},
+  {'size':'1024x1024','idiom':'ios-marketing','filename':'icon-1024.png','scale':'1x'}
+]
+data = {'images': images, 'info': {'version': 1, 'author': 'xcode'}}
+with open('$ICONSET/Contents.json', 'w') as f:
+  json.dump(data, f, indent=2)
+print('Contents.json written')
+"
       - name: Increment build number
         script: |
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER" frontend/ios/App/App/Info.plist
