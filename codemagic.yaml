@@ -37,6 +37,10 @@ workflows:
           ICONSET="frontend/ios/App/App/Assets.xcassets/AppIcon.appiconset"
           mkdir -p "$ICONSET"
           SRC="frontend/resources/icon.png"
+          # Strip alpha channel: convert to BMP (no alpha) then back to PNG
+          sips -s format bmp "$SRC" --out /tmp/_icon_flat.bmp
+          sips -s format png /tmp/_icon_flat.bmp --out /tmp/_icon_noalpha.png
+          SRC=/tmp/_icon_noalpha.png
           sips -z 40 40   "$SRC" --out "$ICONSET/icon-20@2x.png"
           sips -z 60 60   "$SRC" --out "$ICONSET/icon-20@3x.png"
           sips -z 29 29   "$SRC" --out "$ICONSET/icon-29.png"
@@ -49,7 +53,7 @@ workflows:
           sips -z 76 76   "$SRC" --out "$ICONSET/icon-76.png"
           sips -z 152 152 "$SRC" --out "$ICONSET/icon-76@2x.png"
           sips -z 167 167 "$SRC" --out "$ICONSET/icon-83.5@2x.png"
-          cp "$SRC" "$ICONSET/icon-1024.png"
+          sips -z 1024 1024 "$SRC" --out "$ICONSET/icon-1024.png"
           python3 -c "
           import json
           images = [
