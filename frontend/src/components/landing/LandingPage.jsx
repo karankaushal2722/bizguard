@@ -1,5 +1,8 @@
 import styles from './LandingPage.module.css'
 
+// Apple App Store Guideline 3.1.1: hide pricing/purchase UI in the iOS app
+const IS_IOS_APP = typeof window !== 'undefined' && window.Capacitor?.getPlatform?.() === 'ios'
+
 const FEATURES = [
   { icon: '🤖', title: 'Amira — your AI advisor', desc: 'Ask anything about your specific business, industry, and state. Tailored answers, not generic advice.' },
   { icon: '📄', title: 'Document analysis', desc: 'Upload any IRS notice, legal letter, DOT violation, or contract. Amira reads it and tells you what to do.' },
@@ -50,7 +53,7 @@ export default function LandingPage({ onGetStarted }) {
         <div className={styles.navLinks}>
           <button onClick={() => scrollTo('features')}>Features</button>
           <button onClick={() => scrollTo('how')}>How it works</button>
-          <button onClick={() => scrollTo('pricing')}>Pricing</button>
+          {!IS_IOS_APP && <button onClick={() => scrollTo('pricing')}>Pricing</button>}
         </div>
         <button className={styles.navCta} onClick={onGetStarted}>Get started free</button>
       </nav>
@@ -171,7 +174,8 @@ export default function LandingPage({ onGetStarted }) {
         </div>
       </section>
 
-      {/* PRICING */}
+      {/* PRICING (hidden in iOS app per App Store Guideline 3.1.1) */}
+      {!IS_IOS_APP && (
       <section className={styles.section} id="pricing">
         <div className={styles.sectionLabel}>Pricing</div>
         <h2 className={styles.sectionTitle}>Simple, honest pricing</h2>
@@ -224,6 +228,7 @@ export default function LandingPage({ onGetStarted }) {
           </div>
         </div>
       </section>
+      )}
 
       {/* CTA */}
       <div className={styles.cta}>
@@ -232,7 +237,7 @@ export default function LandingPage({ onGetStarted }) {
         <button className={styles.ctaBtn} onClick={onGetStarted}>
           Get started free — no credit card
         </button>
-        <p className={styles.ctaNote}>Free forever plan. Business Pro from $29/month.</p>
+        <p className={styles.ctaNote}>{IS_IOS_APP ? 'Free forever plan. No credit card required.' : 'Free forever plan. Business Pro from $29/month.'}</p>
       </div>
 
       {/* FOOTER */}
