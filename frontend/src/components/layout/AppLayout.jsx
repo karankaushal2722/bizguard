@@ -5,6 +5,9 @@ import DocumentUpload from '../documents/DocumentUpload'
 import UpgradePage from '../billing/UpgradePage'
 import styles from './AppLayout.module.css'
 
+// Apple App Store Guideline 3.1.1: hide external purchase UI in the iOS app
+const IS_IOS_APP = typeof window !== 'undefined' && window.Capacitor?.getPlatform?.() === 'ios'
+
 const NAV_ITEMS = [
   {
     id: 'chat',
@@ -59,6 +62,8 @@ const NAV_ITEMS = [
   },
 ]
 
+const VISIBLE_NAV_ITEMS = IS_IOS_APP ? NAV_ITEMS.filter(item => item.id !== 'upgrade') : NAV_ITEMS
+
 export default function AppLayout() {
   const { user, profile, signOut } = useAuth()
   const [activeTab, setActiveTab] = useState('chat')
@@ -71,7 +76,7 @@ export default function AppLayout() {
     switch (activeTab) {
       case 'chat': return <Chat />
       case 'documents': return <DocumentUpload />
-      case 'upgrade': return <UpgradePage />
+      case 'upgrade': return IS_IOS_APP ? <Chat /> : <UpgradePage />
       default: return (
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--text-muted)', flexDirection: 'column', gap: 12 }}>
           <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 2L4 6v6c0 5.25 3.5 10.15 8 11.5C16.5 22.15 20 17.25 20 12V6L12 2z"/></svg>
@@ -98,7 +103,7 @@ export default function AppLayout() {
         </div>
       )}
       <nav className={styles.nav}>
-        {NAV_ITEMS.map(item => (
+        {VISIBLE_NAV_ITEMS.map(item => (
           <button
             key={item.id}
             className={`${styles.navItem} ${activeTab === item.id ? styles.navActive : ''} ${item.id === 'upgrade' ? styles.navUpgrade : ''}`}
@@ -167,7 +172,7 @@ export default function AppLayout() {
 
       <nav className={styles.bottomNav}>
         <div className={styles.bottomNavInner}>
-          {NAV_ITEMS.map(item => (
+          {VISIBLE_NAV_ITEMS.map(item => (
             <button
               key={item.id}
               className={`${styles.bottomNavItem} ${activeTab === item.id ? styles.bottomNavActive : ''} ${item.id === 'upgrade' ? styles.bottomNavUpgrade : ''}`}
