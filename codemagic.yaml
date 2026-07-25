@@ -32,6 +32,16 @@ workflows:
           npm install -g @capacitor/cli
           npx cap add ios || true
           npx cap sync ios
+      - name: Configure iOS project (permissions + iPhone-only)
+        script: |
+          PLIST=frontend/ios/App/App/Info.plist
+          /usr/libexec/PlistBuddy -c 'Add :NSMicrophoneUsageDescription string BizGuard uses the microphone so you can ask Amira questions using your voice.' "$PLIST" || true
+          /usr/libexec/PlistBuddy -c 'Add :NSSpeechRecognitionUsageDescription string BizGuard uses speech recognition to convert your voice into text.' "$PLIST" || true
+          /usr/libexec/PlistBuddy -c 'Add :NSCameraUsageDescription string BizGuard uses the camera so you can capture documents for analysis.' "$PLIST" || true
+          /usr/libexec/PlistBuddy -c 'Add :NSPhotoLibraryUsageDescription string BizGuard accesses your photo library so you can upload documents for analysis.' "$PLIST" || true
+          PBX=frontend/ios/App/App.xcodeproj/project.pbxproj
+          sed -i '' 's/TARGETED_DEVICE_FAMILY = "1,2"/TARGETED_DEVICE_FAMILY = 1/g' "$PBX"
+          echo "Device family entries:" && grep -c 'TARGETED_DEVICE_FAMILY = 1' "$PBX"
       - name: Set app icon
         script: |
           ICONSET="frontend/ios/App/App/Assets.xcassets/AppIcon.appiconset"
