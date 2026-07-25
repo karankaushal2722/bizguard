@@ -10,6 +10,10 @@ const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 const allowedOrigins = [
     'http://localhost:5173',
+    'capacitor://localhost',
+    'https://localhost',
+    'https://bizguard.co',
+    'https://www.bizguard.co',
     process.env.FRONTEND_URL,
   ].filter(Boolean);
 
