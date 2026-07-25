@@ -62,7 +62,7 @@ const NAV_ITEMS = [
   },
 ]
 
-const VISIBLE_NAV_ITEMS = IS_IOS_APP ? NAV_ITEMS.filter(item => item.id !== 'upgrade') : NAV_ITEMS
+const VISIBLE_NAV_ITEMS = IS_IOS_APP ? NAV_ITEMS.filter(item => item.id !== 'upgrade' && !item.soon) : NAV_ITEMS
 
 export default function AppLayout() {
   const { user, profile, signOut } = useAuth()
