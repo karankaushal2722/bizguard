@@ -22,11 +22,15 @@ const UI_TEXT = {
   zh: { title: '保护您的业务', subtitle: '登录或创建免费账户', emailPlaceholder: '电子邮件', passwordPlaceholder: '密码', signin: '登录', signup: '免费创建账户', toggle_signin: '已有账户？登录', toggle_signup: '没有账户？免费注册', loading: '请稍候...', error_label: '错误' },
   fr: { title: 'Protégez votre entreprise', subtitle: 'Connectez-vous ou créez votre compte gratuit', emailPlaceholder: 'Adresse e-mail', passwordPlaceholder: 'Mot de passe', signin: 'Se connecter', signup: 'Créer un compte gratuit', toggle_signin: 'Déjà un compte ? Se connecter', toggle_signup: 'Pas de compte ? S\'inscrire gratuitement', loading: 'Veuillez patienter...', error_label: 'Erreur' },
   ko: { title: '비즈니스를 보호하세요', subtitle: '로그인하거나 무료 계정을 만드세요', emailPlaceholder: '이메일 주소', passwordPlaceholder: '비밀번호', signin: '로그인', signup: '무료 계정 만들기', toggle_signin: '이미 계정이 있으신가요? 로그인', toggle_signup: '계정이 없으신가요? 무료로 가입', loading: '잠시만 기다려주세요...', error_label: '오류' },
+  hi: { title: 'अपने व्यवसाय की रक्षा करें', subtitle: 'साइन इन करें या मुफ़्त खाता बनाएं', emailPlaceholder: 'ईमेल पता', passwordPlaceholder: 'पासवर्ड', signin: 'साइन इन करें', signup: 'मुफ़्त खाता बनाएं', toggle_signin: 'पहले से खाता है? साइन इन करें', toggle_signup: 'खाता नहीं है? मुफ़्त साइन अप करें', loading: 'कृपया प्रतीक्षा करें...', error_label: 'त्रुटि' },
+  pa: { title: 'ਆਪਣੇ ਕਾਰੋਬਾਰ ਦੀ ਰੱਖਿਆ ਕਰੋ', subtitle: 'ਸਾਈਨ ਇਨ ਕਰੋ ਜਾਂ ਮੁਫ਼ਤ ਖਾਤਾ ਬਣਾਓ', emailPlaceholder: 'ਈਮੇਲ ਪਤਾ', passwordPlaceholder: 'ਪਾਸਵਰਡ', signin: 'ਸਾਈਨ ਇਨ ਕਰੋ', signup: 'ਮੁਫ਼ਤ ਖਾਤਾ ਬਣਾਓ', toggle_signin: 'ਪਹਿਲਾਂ ਤੋਂ ਖਾਤਾ ਹੈ? ਸਾਈਨ ਇਨ ਕਰੋ', toggle_signup: 'ਖਾਤਾ ਨਹੀਂ ਹੈ? ਮੁਫ਼ਤ ਸਾਈਨ ਅੱਪ ਕਰੋ', loading: 'ਕਿਰਪਾ ਕਰਕੇ ਉਡੀਕ ਕਰੋ...', error_label: 'ਗਲਤੀ' },
+  ur: { title: 'اپنے کاروبار کی حفاظت کریں', subtitle: 'سائن ان کریں یا مفت اکاؤنٹ بنائیں', emailPlaceholder: 'ای میل ایڈریس', passwordPlaceholder: 'پاس ورڈ', signin: 'سائن ان کریں', signup: 'مفت اکاؤنٹ بنائیں', toggle_signin: 'پہلے سے اکاؤنٹ ہے؟ سائن ان کریں', toggle_signup: 'اکاؤنٹ نہیں ہے؟ مفت سائن اپ کریں', loading: 'براہ کرم انتظار کریں...', error_label: 'خرابی' },
+  fa: { title: 'از کسب‌وکار خود محافظت کنید', subtitle: 'وارد شوید یا حساب رایگان بسازید', emailPlaceholder: 'آدرس ایمیل', passwordPlaceholder: 'رمز عبور', signin: 'ورود', signup: 'ساخت حساب رایگان', toggle_signin: 'حساب دارید؟ وارد شوید', toggle_signup: 'حساب ندارید؟ رایگان ثبت‌نام کنید', loading: 'لطفاً صبر کنید...', error_label: 'خطا' },
 }
 
-export default function AuthPage({ onBack }) {
+export default function AuthPage({ onBack, initialMode = 'signup' }) {
   const [lang, setLang] = useState('en')
-  const [mode, setMode] = useState('signin') // 'signin' | 'signup'
+  const [mode, setMode] = useState(initialMode) // 'signin' | 'signup'
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -43,9 +47,9 @@ export default function AuthPage({ onBack }) {
 
     try {
       if (mode === 'signup') {
-        const { error } = await supabase.auth.signUp({ email, password })
+        const { data, error } = await supabase.auth.signUp({ email, password })
         if (error) throw error
-        setSuccess('Check your email to confirm your account!')
+        if (!data?.session) setSuccess('Account created! You can now sign in.')
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password })
         if (error) throw error
