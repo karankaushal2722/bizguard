@@ -33,7 +33,7 @@ function AppRoutes() {
   }
 
   if (!user) {
-    if (showAuth) return <AuthPage onBack={() => setShowAuth(false)} />
+    if (showAuth) return <AuthPage onBack={() => setShowAuth(false)} initialMode="signup" />
     return <LandingPage onGetStarted={() => setShowAuth(true)} />
   }
 
