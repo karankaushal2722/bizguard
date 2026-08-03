@@ -134,16 +134,16 @@
 .btnPrimary:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .toggleBtn {
-  display: block;
   width: 100%;
-  margin-top: 1rem;
-  font-size: 13px;
-  color: var(--text-muted);
-  background: none;
-  border: none;
-  padding: 6px;
-  text-align: center;
-  transition: color 0.15s;
+  margin-top: 14px;
+  padding: 11px 16px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--blue-500, #185FA5);
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .toggleBtn:hover { color: var(--blue-500); }
