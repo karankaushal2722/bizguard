@@ -42,6 +42,8 @@ workflows:
           PBX=frontend/ios/App/App.xcodeproj/project.pbxproj
           sed -i '' 's/TARGETED_DEVICE_FAMILY = "1,2"/TARGETED_DEVICE_FAMILY = 1/g' "$PBX"
           echo "Device family entries:" && grep -c 'TARGETED_DEVICE_FAMILY = 1' "$PBX"
+          sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = [0-9.][0-9.]*/IPHONEOS_DEPLOYMENT_TARGET = 15.0/g' "$PBX"
+          echo "Deployment target 15.0 entries:" && grep -c 'IPHONEOS_DEPLOYMENT_TARGET = 15.0' "$PBX"
       - name: Set app icon
         script: |
           ICONSET="frontend/ios/App/App/Assets.xcassets/AppIcon.appiconset"
