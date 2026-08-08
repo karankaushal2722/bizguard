@@ -9,14 +9,12 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
 
 useEffect(() => {
-  // Get initial session
-          supabase.auth.getSession().then(({ data: { session } }) => {
-            setUser(session?.user ?? null)
-            if (session?.user) fetchProfile(session.user.id)
-            else setLoading(false)
-          })
+  supabase.auth.getSession().then(({ data: { session } }) => {
+    setUser(session?.user ?? null)
+    if (session?.user) fetchProfile(session.user.id)
+    else setLoading(false)
+  })
 
-          // Listen for auth changes
           const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
             setUser(session?.user ?? null)
             if (session?.user) fetchProfile(session.user.id)
@@ -51,8 +49,8 @@ async function refreshProfile() {
 
 const value = { user, profile, loading, refreshProfile, signOut }
 
-return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>AuthContext.Provider>
-  }
+return <AuthContext.Provider value={value} children={children} />
+}
 
 export function useAuth() {
   const ctx = useContext(AuthContext)
