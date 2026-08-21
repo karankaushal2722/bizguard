@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { AuthProvider, useAuth } from './hooks/useAuth'
 import AuthPage from './components/auth/AuthPage'
 import Onboarding from './components/onboarding/Onboarding'
+import AIConsent from './components/consent/AIConsent'
 import AppLayout from './components/layout/AppLayout'
 import LandingPage from './components/landing/LandingPage'
 import PrivacyPolicy from './components/legal/PrivacyPolicy'
@@ -38,6 +39,10 @@ function AppRoutes() {
   }
 
   if (!profile) return <Onboarding />
+
+  // Guidelines 5.1.1(i)/5.1.2(i): user must explicitly consent to having their
+  // messages sent to Anthropic's Claude AI before reaching any AI features.
+  if (!profile.ai_consent_at) return <AIConsent />
 
   return <AppLayout />
 }

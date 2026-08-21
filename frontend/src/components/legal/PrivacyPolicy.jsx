@@ -17,12 +17,14 @@ export default function PrivacyPolicy() {
         <ul>
           <li>To provide and personalize BizGuard's AI guidance</li>
           <li>To process payments and manage your subscription</li>
-          <li>To improve our AI models and service quality</li>
+          <li>To monitor and improve BizGuard's own product and service quality (we do not use your conversations to train Anthropic's models)</li>
           <li>To send important service and account notifications</li>
           <li>To comply with legal obligations</li>
         </ul>
         <h2>3. AI and Data Processing</h2>
-        <p>BizGuard uses Anthropic's Claude AI to power Amira. Your questions and business information are sent to Anthropic's API to generate responses. We do not sell your data to third parties for advertising purposes.</p>
+        <p>BizGuard uses Anthropic's Claude AI, a third-party AI service, to power Amira. When you ask Amira a question or upload a document for analysis, the following is sent to Anthropic's API: the text of your question or document, and relevant business details from your profile (such as industry and state) needed to generate a useful response.</p>
+        <p>Before you can use Amira for the first time, BizGuard asks for your explicit consent to this data sharing in the app itself — not just in this policy.</p>
+        <p>Anthropic is contractually required to protect this data to a standard equal to or greater than BizGuard's own protections described in this policy, and does not use data submitted through its API to train its models. We do not sell your data to third parties for advertising purposes.</p>
         <h2>4. Data Storage and Security</h2>
         <p>Your data is stored securely using Supabase (SOC 2 compliant) with TLS encryption in transit and at rest. Data is retained while your account is active and deleted within 90 days of account closure upon request.</p>
         <h2>5. Sharing Your Information</h2>
