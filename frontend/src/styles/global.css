@@ -38,7 +38,25 @@
   --gray-700: #44403A;
   --gray-900: #1C1917;
 
+  /* Blue (used for form submit buttons, upgrade CTAs, onboarding, uploads) */
+  --blue-50:  #EFF6FF;
+  --blue-100: #DBEAFE;
+  --blue-400: #60A5FA;
+  --blue-500: #3B82F6;
+  --blue-600: #2563EB;
+  --blue-700: #1D4ED8;
+
+  /* Green (success states) */
+  --green-50:  #F0FDF4;
+  --green-500: #22C55E;
+
+  /* Red (error states) */
+  --red-50:  #FEF2F2;
+  --red-500: #DC2626;
+
   /* Semantic */
+  --bg-subtle:    #F5F4F2;
+  --border-strong: #C4C0B8;
   --bg:           #FAFAF9;
   --bg-muted:     #F5F4F2;
   --bg-sidebar:   #0D0B14;
