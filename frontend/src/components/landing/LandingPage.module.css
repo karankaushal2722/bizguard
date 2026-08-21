@@ -35,7 +35,7 @@
 
 /* SECTIONS */
 .section { padding: 96px 5%; max-width: 1200px; margin: 0 auto; }
-.sectionLabel { font-size: 12px; font-weight: 700; color: var(--orange-500); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; }
+.sectionLabel { font-size: 13px; font-weight: 700; color: var(--orange-500); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; }
 .sectionTitle { font-size: clamp(28px,4vw,44px); font-weight: 800; line-height: 1.1; letter-spacing: -1px; margin-bottom: 48px; color: var(--text); }
 
 /* FEATURES */
@@ -75,7 +75,7 @@
 .testimonialAuthor { display: flex; align-items: center; gap: 12px; }
 .avatar { width: 40px; height: 40px; border-radius: var(--radius-full); background: linear-gradient(135deg,#F97316,#7C3AED); color: white; font-size: 14px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .testimonialName { font-size: 14px; font-weight: 700; color: var(--text); }
-.testimonialRole { font-size: 12px; color: var(--text-muted); }
+.testimonialRole { font-size: 13px; color: var(--text-muted); }
 
 /* INDUSTRIES */
 .industries { padding: 80px 5%; text-align: center; border-top: 1px solid var(--border); }
@@ -90,8 +90,8 @@
 .pricingCard:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
 .pricingFeatured { border-color: var(--orange-400); box-shadow: 0 0 0 1px var(--orange-400), var(--shadow-orange); }
 .pricingEnterprise { border-color: var(--purple-500); box-shadow: 0 0 0 1px var(--purple-500), var(--shadow-purple); }
-.featuredBadge { position: absolute; top: -13px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg,#F97316,#EA580C); color: white; font-size: 12px; font-weight: 700; padding: 4px 16px; border-radius: var(--radius-full); white-space: nowrap; box-shadow: var(--shadow-orange); }
-.enterpriseBadge { position: absolute; top: -13px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg,#7C3AED,#6D28D9); color: white; font-size: 12px; font-weight: 700; padding: 4px 16px; border-radius: var(--radius-full); white-space: nowrap; box-shadow: var(--shadow-purple); }
+.featuredBadge { position: absolute; top: -13px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg,#F97316,#EA580C); color: white; font-size: 13px; font-weight: 700; padding: 4px 16px; border-radius: var(--radius-full); white-space: nowrap; box-shadow: var(--shadow-orange); }
+.enterpriseBadge { position: absolute; top: -13px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg,#7C3AED,#6D28D9); color: white; font-size: 13px; font-weight: 700; padding: 4px 16px; border-radius: var(--radius-full); white-space: nowrap; box-shadow: var(--shadow-purple); }
 .planName { font-size: 14px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
 .planPrice { font-size: 48px; font-weight: 800; letter-spacing: -2px; margin-bottom: 6px; color: var(--text); }
 .planPrice span { font-size: 17px; font-weight: 500; color: var(--text-muted); letter-spacing: 0; }
@@ -122,6 +122,6 @@
 .footerInner { max-width: 1200px; margin: 0 auto; }
 .footerLogo { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 10px; }
 .footerTagline { font-size: 14px; color: rgba(255,255,255,0.35); margin-bottom: 24px; }
-.footerDisclaimer { font-size: 12px; color: rgba(255,255,255,0.2); }
+.footerDisclaimer { font-size: 13px; color: rgba(255,255,255,0.2); }
 
 @media (max-width: 768px) { .navLinks { display: none; } .step { grid-template-columns: 46px 1fr; } .stepNum { width: 46px; height: 46px; font-size: 16px; } .step:not(:last-child)::before { left: 22px; } }

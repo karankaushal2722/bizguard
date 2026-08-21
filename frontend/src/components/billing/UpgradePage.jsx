@@ -1,13 +1,24 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from '../../hooks/useAuth'
+import { IS_IOS_APP, getOfferings, purchasePackage, getActivePlan, getCustomerInfo } from '../../lib/revenuecat'
 import styles from './UpgradePage.module.css'
 
 const API_BASE = import.meta.env.VITE_API_URL || ''
 
+// Maps our plan naming to the RevenueCat package identifiers configured in the dashboard
+const RC_PACKAGE_IDS = {
+  business_monthly: '$rc_monthly',
+  business_yearly: '$rc_annual',
+  enterprise_monthly: 'enterprise_monthly',
+  enterprise_yearly: 'enterprise_yearly',
+}
+
 export default function UpgradePage() {
-  const { user, profile } = useAuth()
+  const { user, profile, refreshProfile } = useAuth()
   const [billing, setBilling] = useState('monthly')
   const [loading, setLoading] = useState('')
+  const [offering, setOffering] = useState(null)
+  const [activePlan, setActivePlan] = useState('free')
   const firstName = profile?.owner_name?.split(' ')[0] || 'there'
 
   const prices = {
@@ -17,11 +28,34 @@ export default function UpgradePage() {
     enterprise_yearly: 32,
   }
 
+  useEffect(() => {
+    if (!IS_IOS_APP) return
+    getOfferings().then(setOffering)
+    getCustomerInfo().then(info => setActivePlan(getActivePlan(info))).catch(() => {})
+  }, [])
+
   async function handleUpgrade(planType) {
     if (!user) return
+    const planId = planType + '_' + billing
     setLoading(planType)
+
+    if (IS_IOS_APP) {
+      try {
+        const rcId = RC_PACKAGE_IDS[planId]
+        const pkg = offering?.availablePackages?.find(p => p.identifier === rcId)
+        if (!pkg) throw new Error('This plan is not available for purchase right now.')
+        const customerInfo = await purchasePackage(pkg)
+        setActivePlan(getActivePlan(customerInfo))
+        if (refreshProfile) refreshProfile()
+      } catch (err) {
+        if (!err?.userCancelled) alert(err?.message || 'Purchase could not be completed. Please try again.')
+      } finally {
+        setLoading('')
+      }
+      return
+    }
+
     try {
-      const planId = planType + '_' + billing
       const res = await fetch(API_BASE + '/api/stripe/create-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -75,9 +109,13 @@ export default function UpgradePage() {
               <div key={i} className={styles.feature}><span className={styles.checkPro}>✓</span>{f}</div>
             ))}
           </div>
-          <button className={styles.upgradeBtn} onClick={() => handleUpgrade('business')} disabled={loading === 'business'}>
-            {loading === 'business' ? 'Redirecting...' : `Upgrade to Business Pro — $${billing === 'monthly' ? prices.business_monthly : prices.business_yearly}/mo`}
-          </button>
+          {activePlan === 'pro' || activePlan === 'enterprise' ? (
+            <div className={styles.currentPlanBtn}>Your current plan</div>
+          ) : (
+            <button className={styles.upgradeBtn} onClick={() => handleUpgrade('business')} disabled={loading === 'business'}>
+              {loading === 'business' ? (IS_IOS_APP ? 'Processing…' : 'Redirecting...') : `Upgrade to Business Pro — $${billing === 'monthly' ? prices.business_monthly : prices.business_yearly}/mo`}
+            </button>
+          )}
           <p className={styles.guarantee}>Cancel anytime. No contracts.</p>
         </div>
 
@@ -95,15 +133,19 @@ export default function UpgradePage() {
               <div key={i} className={styles.feature}><span className={styles.checkEnterprise}>✓</span>{f}</div>
             ))}
           </div>
-          <button className={styles.upgradeBtn + ' ' + styles.enterpriseBtn} onClick={() => handleUpgrade('enterprise')} disabled={loading === 'enterprise'}>
-            {loading === 'enterprise' ? 'Redirecting...' : `Upgrade to Enterprise — $${billing === 'monthly' ? prices.enterprise_monthly : prices.enterprise_yearly}/mo`}
-          </button>
+          {activePlan === 'enterprise' ? (
+            <div className={styles.currentPlanBtn}>Your current plan</div>
+          ) : (
+            <button className={styles.upgradeBtn + ' ' + styles.enterpriseBtn} onClick={() => handleUpgrade('enterprise')} disabled={loading === 'enterprise'}>
+              {loading === 'enterprise' ? (IS_IOS_APP ? 'Processing…' : 'Redirecting...') : `Upgrade to Enterprise — $${billing === 'monthly' ? prices.enterprise_monthly : prices.enterprise_yearly}/mo`}
+            </button>
+          )}
           <p className={styles.guarantee}>Cancel anytime. No contracts.</p>
         </div>
       </div>
 
       <div className={styles.trust}>
-        <div className={styles.trustItem}><span>🔒</span><span>Secure payments via Stripe</span></div>
+        <div className={styles.trustItem}><span>🔒</span><span>{IS_IOS_APP ? 'Secure payments via Apple' : 'Secure payments via Stripe'}</span></div>
         <div className={styles.trustItem}><span>↩️</span><span>Cancel anytime</span></div>
         <div className={styles.trustItem}><span>🛡️</span><span>Built for small business owners</span></div>
       </div>

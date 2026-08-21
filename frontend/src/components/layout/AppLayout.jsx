@@ -3,10 +3,12 @@ import { useAuth } from '../../hooks/useAuth'
 import Chat from '../chat/Chat'
 import DocumentUpload from '../documents/DocumentUpload'
 import UpgradePage from '../billing/UpgradePage'
+import Profile from '../profile/Profile'
+import { IS_IOS_APP } from '../../lib/revenuecat'
 import styles from './AppLayout.module.css'
 
-// Apple App Store Guideline 3.1.1: hide external purchase UI in the iOS app
-const IS_IOS_APP = typeof window !== 'undefined' && window.Capacitor?.getPlatform?.() === 'ios'
+// Upgrade now uses native Apple In-App Purchase (via RevenueCat) on iOS,
+// so it no longer needs to be hidden per Guideline 3.1.1/3.1.3(b).
 
 const NAV_ITEMS = [
   {
@@ -62,7 +64,8 @@ const NAV_ITEMS = [
   },
 ]
 
-const VISIBLE_NAV_ITEMS = IS_IOS_APP ? NAV_ITEMS.filter(item => item.id !== 'upgrade' && !item.soon) : NAV_ITEMS
+// Guideline 2.2: keep incomplete "Coming Soon" placeholder tabs out of the iOS app
+const VISIBLE_NAV_ITEMS = IS_IOS_APP ? NAV_ITEMS.filter(item => !item.soon) : NAV_ITEMS
 
 export default function AppLayout() {
   const { user, profile, signOut } = useAuth()
@@ -76,7 +79,8 @@ export default function AppLayout() {
     switch (activeTab) {
       case 'chat': return <Chat />
       case 'documents': return <DocumentUpload />
-      case 'upgrade': return IS_IOS_APP ? <Chat /> : <UpgradePage />
+      case 'upgrade': return <UpgradePage />
+      case 'profile': return <Profile />
       default: return (
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--text-muted)', flexDirection: 'column', gap: 12 }}>
           <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 2L4 6v6c0 5.25 3.5 10.15 8 11.5C16.5 22.15 20 17.25 20 12V6L12 2z"/></svg>

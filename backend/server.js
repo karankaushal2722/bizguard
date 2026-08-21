@@ -3,10 +3,19 @@ const express = require('express');
 const cors = require('cors');
 const Anthropic = require('@anthropic-ai/sdk');
 const Stripe = require('stripe');
+const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+
+// Admin client (service role key — server-side only, never expose to the frontend)
+// used for account deletion. Requires SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.
+const supabaseAdmin = (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY)
+  ? createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, {
+      auth: { autoRefreshToken: false, persistSession: false },
+    })
+  : null;
 
 const allowedOrigins = [
     'http://localhost:5173',
@@ -69,7 +78,7 @@ app.post('/api/chat', async (req, res) => {
 });
 
 
-// ── Document Analysis ─────────────────────────────────────────────────────────
+// ── Document Analysis ──────────────────────────────────────────────────
 app.post('/api/analyze-document', async (req, res) => {
   try {
     const { messages, systemPrompt } = req.body;
@@ -147,6 +156,36 @@ app.get('/api/stripe/subscription/:userId', async (req, res) => {
     } catch (err) {
           res.status(500).json({ error: err.message });
     }
+});
+
+// ── Account Deletion (Apple Guideline 5.1.1(v)) ──────────────────────────────────────
+// Authenticates the caller via their Supabase access token, then permanently
+// deletes their profile row and their Supabase auth account.
+app.delete('/api/account', async (req, res) => {
+  try {
+    if (!supabaseAdmin) {
+      return res.status(500).json({ error: 'Account deletion is not configured on the server.' });
+    }
+    const authHeader = req.headers.authorization || '';
+    const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
+    if (!token) return res.status(401).json({ error: 'Missing authorization token.' });
+
+    const { data: userData, error: userErr } = await supabaseAdmin.auth.getUser(token);
+    if (userErr || !userData?.user) return res.status(401).json({ error: 'Invalid or expired session.' });
+    const userId = userData.user.id;
+
+    // Remove app data first, then the auth user itself.
+    const { error: profileErr } = await supabaseAdmin.from('profiles').delete().eq('id', userId);
+    if (profileErr) console.error('Profile delete error:', profileErr.message);
+
+    const { error: deleteErr } = await supabaseAdmin.auth.admin.deleteUser(userId);
+    if (deleteErr) throw deleteErr;
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Account deletion error:', err.message);
+    res.status(500).json({ error: 'Could not delete account. Please try again.' });
+  }
 });
 
 const PORT = process.env.PORT || 3001;

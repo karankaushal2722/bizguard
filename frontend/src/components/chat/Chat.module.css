@@ -10,7 +10,7 @@
 .voiceBtn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px; background: white; border: 1.5px solid var(--border-dark); border-radius: var(--radius-full); font-size: 14px; font-weight: 600; color: var(--text-muted); cursor: pointer; transition: all 0.2s; box-shadow: var(--shadow-sm); margin-bottom: 36px; }
 .voiceBtn:hover { border-color: var(--brand); color: var(--brand); background: var(--brand-light); box-shadow: var(--shadow-orange); transform: translateY(-1px); }
 .voiceBtnActive { background: var(--gradient); border-color: transparent; color: white; }
-.quickPromptLabel { font-size: 11px; font-weight: 700; color: var(--text-subtle); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 12px; }
+.quickPromptLabel { font-size: 13px; font-weight: 700; color: var(--text-subtle); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 12px; }
 .quickPrompts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 560px; width: 100%; }
 .quickPrompt { background: white; border: 1.5px solid var(--border); border-radius: var(--radius-lg); padding: 13px 16px; font-size: 13.5px; font-weight: 500; color: var(--gray-700); cursor: pointer; text-align: left; transition: all 0.15s; line-height: 1.4; box-shadow: var(--shadow-sm); }
 .quickPrompt:hover { border-color: var(--brand); color: var(--orange-700); background: var(--brand-light); transform: translateY(-2px); box-shadow: var(--shadow-orange); }
@@ -40,4 +40,4 @@
 .sendBtn { width: 36px; height: 36px; border-radius: var(--radius-full); background: linear-gradient(135deg, #F97316, #EA580C); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; transition: all 0.15s; flex-shrink: 0; box-shadow: var(--shadow-orange); }
 .sendBtn:hover { transform: scale(1.08); box-shadow: 0 6px 20px rgba(249,115,22,0.5); }
 .sendBtn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
-.disclaimer { font-size: 11px; color: var(--text-subtle); text-align: center; margin-top: 8px; }
+.disclaimer { font-size: 13px; color: var(--text-subtle); text-align: center; margin-top: 8px; }

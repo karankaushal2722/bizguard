@@ -43,8 +43,9 @@
   --bg-muted:     #F5F4F2;
   --bg-sidebar:   #0D0B14;
   --text:         #1C1917;
-  --text-muted:   #78736A;
-  --text-subtle:  #A8A399;
+  /* Darkened for WCAG AA contrast (>=4.5:1) — Apple Guideline 4 legibility fix */
+  --text-muted:   #6B6660;
+  --text-subtle:  #757066;
   --border:       #ECEAE6;
   --border-dark:  #D9D6CF;
 
@@ -78,11 +79,12 @@ html, body, #root {
   font-family: var(--font);
   background: var(--bg);
   color: var(--text);
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
 
 button, input, textarea, select { font-family: inherit; font-size: inherit; }
 button { cursor: pointer; }
